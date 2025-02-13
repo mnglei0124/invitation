@@ -100,13 +100,13 @@ const Invitation = () => {
               <button
                 ref={setYesButtonRef}
                 onClick={() => setResponse(true)}
-                className="bg-pink-500 text-white px-8 py-3 rounded-full hover:bg-pink-600 transform hover:scale-105 transition-all shadow-md"
+                className="bg-pink-500 text-white px-8 py-3 rounded-full hover:bg-pink-600 transform hover:scale-105 transition-all shadow-md text-sm sm:text-base"
               >
                 Аанхаа ❤️
               </button>
               <button
                 onClick={handleNoClick}
-                className="bg-gray-300 text-gray-700 px-8 py-3 rounded-full hover:bg-gray-400 transform hover:scale-105 transition-all shadow-md"
+                className="bg-gray-300 text-gray-700 px-8 py-3 rounded-full hover:bg-gray-400 transform hover:scale-105 transition-all shadow-md text-sm sm:text-base"
               >
                 Давар
               </button>
