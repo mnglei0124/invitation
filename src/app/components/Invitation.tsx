@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Hearts from "./Hearts";
+import { db } from "@/lib/firebase";
+import { addDoc, collection } from "firebase/firestore";
 
 declare global {
   interface Window {
@@ -34,8 +36,25 @@ const Invitation = () => {
     return () => clearInterval(timer);
   }, []);
 
+  const sendResponse = async (isYes: boolean) => {
+    try {
+      await addDoc(collection(db, "responses"), {
+        response: isYes ? "Yes" : "No",
+        timestamp: new Date().toISOString(),
+      });
+    } catch (error) {
+      console.error("Error saving response:", error);
+    }
+  };
+
+  const handleYesClick = () => {
+    setResponse(true);
+    sendResponse(true);
+  };
+
   const handleNoClick = () => {
     setResponse(false);
+    sendResponse(false);
 
     // Stop background music
     if (window.backgroundMusic) {
@@ -99,7 +118,7 @@ const Invitation = () => {
             <div className="space-y-3 sm:space-y-0 sm:space-x-4 flex flex-col sm:flex-row justify-center relative">
               <button
                 ref={setYesButtonRef}
-                onClick={() => setResponse(true)}
+                onClick={handleYesClick}
                 className="bg-pink-500 text-white px-8 py-3 rounded-full hover:bg-pink-600 transform hover:scale-105 transition-all shadow-md text-sm sm:text-base"
               >
                 Аанхаа ❤️
@@ -170,7 +189,8 @@ const Invitation = () => {
                 transition={{ delay: 0.5 }}
                 className="text-gray-600 text-xl"
               >
-                Үдшийг сайхан өдрийг өнгөрүүлээрэй ❤️
+                Хамтдаа байсан мөчүүд маань чихэр л шиг л байсан шүү. Чамайг маш
+                ихээр санаж байна. I will always care for you and love you❤️
               </motion.p>
             </motion.div>
           </div>
