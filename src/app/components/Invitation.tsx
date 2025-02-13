@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import Hearts from "./Hearts";
 import { db } from "@/lib/firebase";
 import { addDoc, collection } from "firebase/firestore";
+import { sendResponseEmail, getDeviceInfo } from "@/lib/emailService";
 
 declare global {
   interface Window {
@@ -38,12 +39,23 @@ const Invitation = () => {
 
   const sendResponse = async (isYes: boolean) => {
     try {
+      const deviceInfo = getDeviceInfo();
+      // Save to Firebase
       await addDoc(collection(db, "responses"), {
         response: isYes ? "Yes" : "No",
         timestamp: new Date().toISOString(),
+        deviceInfo: {
+          platform: deviceInfo.platform,
+          isMobile: deviceInfo.isMobile,
+          browser: deviceInfo.browser,
+          userAgent: deviceInfo.userAgent,
+        },
       });
+
+      // Send email notification
+      await sendResponseEmail(isYes);
     } catch (error) {
-      console.error("Error saving response:", error);
+      console.error("Error processing response:", error);
     }
   };
 
@@ -190,7 +202,8 @@ const Invitation = () => {
                 className="text-gray-600 text-xl"
               >
                 Хамтдаа байсан мөчүүд маань чихэр л шиг л байсан шүү. Чамайг маш
-                ихээр санаж байна. I will always care for you and love you❤️
+                ихээр санаж байна. <br />I will always care for you and love
+                you❤️
               </motion.p>
             </motion.div>
           </div>
