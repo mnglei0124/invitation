@@ -6,6 +6,14 @@ const Envelope = ({ onOpen }: { onOpen: () => void }) => {
 
   const handleClick = () => {
     setIsOpening(true);
+
+    // Start playing background music on click
+    if (window.backgroundMusic) {
+      window.backgroundMusic
+        .play()
+        .catch((e) => console.log("Audio play failed:", e));
+    }
+
     setTimeout(onOpen, 1500);
   };
 

@@ -2,6 +2,12 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Hearts from "./Hearts";
 
+declare global {
+  interface Window {
+    backgroundMusic: HTMLAudioElement;
+  }
+}
+
 const Invitation = () => {
   const [response, setResponse] = useState<null | boolean>(null);
   const [timeLeft, setTimeLeft] = useState("");
@@ -27,6 +33,27 @@ const Invitation = () => {
 
     return () => clearInterval(timer);
   }, []);
+
+  const handleNoClick = () => {
+    setResponse(false);
+
+    // Stop background music
+    if (window.backgroundMusic) {
+      window.backgroundMusic.pause();
+      window.backgroundMusic.currentTime = 0;
+    }
+
+    // Play no.mp3
+    const noAudio = new Audio("/no.mp3");
+    noAudio.volume = 0.2;
+    noAudio.play();
+
+    // Stop no.mp3 after 10 seconds
+    setTimeout(() => {
+      noAudio.pause();
+      noAudio.currentTime = 0;
+    }, 10000);
+  };
 
   return (
     <motion.div
@@ -78,7 +105,7 @@ const Invitation = () => {
                 Yes ❤️
               </button>
               <button
-                onClick={() => setResponse(false)}
+                onClick={handleNoClick}
                 className="bg-gray-300 text-gray-700 px-8 py-3 rounded-full hover:bg-gray-400 transform hover:scale-105 transition-all shadow-md"
               >
                 No
